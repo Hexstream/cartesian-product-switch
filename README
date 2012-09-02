@@ -12,7 +12,7 @@ and library name change. Further features and extensibility were also
 added.
 
 
-Here are two usage examples of CARTESIAN-PRODUCT-SWITCH:
+Here's an example:
 
 (let ((manner :flip) (direction :backward))
   (cartesian-product-switch ((case manner
