@@ -96,15 +96,15 @@
                                :in-place
                                :backward))
     <code class="string">"Walking..."</code>
-    (<a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_error.htm">error</a> <code class="string">"Walking in-place is too boring!"</code>)
+    (error <code class="string">"Walking in-place is too boring!"</code>)
     <code class="string">"Awkwardly walking backwards..."</code>
     <code class="string">"Frontflip!"</code>
     <code class="string">"Jumping in-place."</code>
     <code class="string">"Backflip!"</code>
-    (<code class="common-lisp library marker">t</code> (<a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_error.htm">error</a> <code class="string">"Don't know how to ~A while going ~A."</code> <var>manner</var> <var>direction</var>))))</code></pre>
+    (<code class="common-lisp library marker">t</code> (error <code class="string">"Don't know how to ~A while going ~A."</code> <var>manner</var> <var>direction</var>))))</code></pre>
         </div>
 
-        <p><b>To use <code class="common-lisp library macro operator">cartesian-product-switch</code>, simply <code class="common-lisp">(<a href="http://www.lispworks.com/documentation/HyperSpec/Body/m_defpkg.htm">:import-from</a> #:cartesian-product-switch #:cartesian-product-switch)</code>. Don't <code class="common-lisp">(<a href="http://www.lispworks.com/documentation/HyperSpec/Body/m_defpkg.htm">:use</a>)</code>!</b></p>
+        <p><b>To use <code class="common-lisp library macro operator">cartesian-product-switch</code>, simply <code class="common-lisp">(:import-from #:cartesian-product-switch #:cartesian-product-switch)</code>. Don't <code class="common-lisp">(:use)</code>!</b></p>
 
         <p>Currently supported testclause kinds:</p>
         <ul>
