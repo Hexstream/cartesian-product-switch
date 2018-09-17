@@ -14,4 +14,6 @@
   :components ((:file "package")
                (:file "info")
                (:file "definitions")
-	       (:file "main")))
+	       (:file "main"))
+
+  :in-order-to ((asdf:test-op (asdf:test-op #:cartesian-product-switch_tests))))
