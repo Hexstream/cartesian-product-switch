@@ -1,21 +1,5 @@
 (in-package #:cartesian-product-switch)
 
-;; Turns out this isn't needed. Argh!
-#+nil
-(defun %cartesian-product (&rest possibility-groups)
-  (when (and possibility-groups (not (member nil possibility-groups))) 
-    (labels ((recurse (groups)
-               (destructuring-bind (first-group . other-groups) groups
-                 (if other-groups
-                     (let ((constructed-groups (recurse other-groups)))
-                       (mapcan (lambda (possibility)
-                                 (mapcar (lambda (group)
-                                           (cons possibility group))
-                                         constructed-groups))
-                               first-group))
-                     (mapcar #'list first-group)))))
-      (recurse possibility-groups))))
-
 (defun %expand-linearize (testclauses env)
   (let (selection-forms selection-counts defaultps)
     (dolist (testclause testclauses (values (nreverse selection-forms)
@@ -42,7 +26,6 @@
      (map-bind (mapcar) ((selection-form selection-forms)
                          (defaultp defaultps)
                          (factor (%compute-factors selection-counts)))
-       
        `(* ,factor ,(if defaultp
                         `(or ,selection-form (go ,else-tag))
                         selection-form)))
