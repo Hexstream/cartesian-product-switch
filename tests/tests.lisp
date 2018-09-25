@@ -22,7 +22,7 @@
                       "Backflip!"
                       (t (error "Don't know how to ~A while going ~A." manner direction)))))
              (etypecase expected
-               (string (is string= (invoke) expected))
+               (string (is string= expected (invoke)))
                ((eql error) (fail (invoke)))))))
     (test :walk :forward "Walking...")
     (test :walk :in-place 'error)
