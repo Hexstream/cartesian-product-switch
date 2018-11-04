@@ -7,7 +7,7 @@
                (funcall function arg (incf index)))
              arg)))
 
-(cartesian-product-switch:define svref (possibilities-count index)
+(define (testclause svref) (possibilities-count index)
   (check-type possibilities-count (integer 0))
   (values (let ((index-var (gensym (string '#:index))))
             `(let ((,index-var ,index))
@@ -15,7 +15,7 @@
           possibilities-count
           t))
 
-(cartesian-product-switch:define cond (&body tests)
+(define (testclause cond) (&body tests)
   (values `(cond ,@(%map-with-index #'mapcar #'list tests))
           (length tests)
           t))
@@ -23,7 +23,7 @@
 (dolist (operator-group '((case ccase ecase) (typecase ctypecase etypecase)))
   (let ((group-name (first operator-group)))
     (dolist (operator operator-group)
-      (cartesian-product-switch:ensure
+      (%ensure
        operator
        (list (if (member operator '(ccase ctypecase))
                  'keyplace
@@ -41,5 +41,5 @@
                    (length tests)
                    (member operator '(case typecase)))))))))
 
-(cartesian-product-switch:define if (test)
+(define (testclause if) (test)
   (values `(if ,test 0 1) 2 nil))

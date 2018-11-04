@@ -6,7 +6,7 @@
                                             (nreverse selection-counts)
                                             (nreverse defaultps)))
       (multiple-value-bind (selform selcount defaultp)
-          (cartesian-product-switch:expand testclause env)
+          (%expand testclause env)
         (push selform selection-forms)
         (push selcount selection-counts)
         (push defaultp defaultps)))))
