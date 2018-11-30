@@ -51,15 +51,12 @@
                    `(* ,@selection-counts)
                    permutations-count
                    clauses-count)))
-        (let ((output-clauses (let ((index -1))
-                                (map-bind (mapcar) ((form forms))
-                                  `(,(incf index) ,form)))))
-          `(block ,block-name
-             (tagbody
-                (return-from ,block-name
-                  ,(if output-clauses
-                       `(ecase (+ ,@selection-forms)
-                          ,@output-clauses)
-                       `(prog1 nil (+ ,@selection-forms))))
-                ,else-tag
-                (return-from ,block-name (progn ,@(rest else-clause))))))))))
+        `(block ,block-name
+           (tagbody
+              (return-from ,block-name
+                ,(if forms
+                     `(ejumpcase (+ ,@selection-forms)
+                        ,@forms)
+                     `(prog1 nil (+ ,@selection-forms))))
+              ,else-tag
+              (return-from ,block-name (progn ,@(rest else-clause)))))))))

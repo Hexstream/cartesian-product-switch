@@ -8,6 +8,7 @@
   :description "CARTESIAN-PRODUCT-SWITCH is a macro for choosing the appropriate form to execute according to the combined results of multiple tests. This is a straightforward and efficient alternative to the convoluted ad-hoc conditionals one might otherwise resort to."
 
   :depends-on ("definitions-systems"
+               "trivial-jumptables"
                "map-bind")
 
   :version "2.0"
