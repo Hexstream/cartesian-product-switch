@@ -1,52 +1,10 @@
-Project's home: https://www.hexstreamsoft.com/projects/cartesian-product-switch/
+Project's home: https://www.hexstreamsoft.com/libraries/cartesian-product-switch/
 
 
 CARTESIAN-PRODUCT-SWITCH is a macro for choosing the appropriate form
 to execute according to the combined results of multiple tests. This is a
 straightforward and efficient alternative to the convoluted ad-hoc
 conditionals one might otherwise resort to.
-
-cartesian-product-switch was born as cartesian-product-case but a
-fairly obvious limitation was soon discovered, prompting a redesign
-and library name change. Further features and extensibility were also
-added.
-
-
-Here's an example:
-
-(let ((manner :flip) (direction :backward))
-  (cartesian-product-switch ((case manner
-                               :walk
-                               :flip)
-                             (case direction
-                               :forward
-                               :in-place
-                               :backward))
-    "Walking..."
-    (error "Walking in-place is too boring!")
-    "Awkwardly walking backwards..."
-    "Frontflip!"
-    "Jumping in-place."
-    "Backflip!"
-    (t (error "Don't know how to ~A while going ~A." manner direction))))
-
-
-Currently supported testclause kinds:
-(case ccase ecase typecase ctypecase etypecase if cond svref)
-
-It's also possible to make your own kinds.
-Check definitions.lisp in particular for inspiration.
-In a nutshell, call (cartesian-product-switch:define operator (args) body),
-where BODY must return 3 values:
-
-SELECTION-FORM:
-A form evaluating to a non-negative integer less than SELECTION-COUNT.
-
-SELECTION-COUNT:
-The number of possibilities this testclause introduces.
-
-DEFAULTP:
-If true, then the SELECTION-FORM can evaluate to NIL to trigger the "default".
 
 
 This library is in the Public Domain.
