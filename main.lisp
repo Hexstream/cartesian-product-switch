@@ -13,22 +13,23 @@
 
 (defun %compute-factors (selection-counts)
   (let ((permutations-so-far 1))
-    (map-bind (reduce) (((selection-count permutations-list) selection-counts)
-                        (() :from-end t :initial-value nil))
-      (prog1 (cons permutations-so-far permutations-list)
-        (setf permutations-so-far
-              (* selection-count permutations-so-far))))))
+    (reduce (lambda (selection-count permutations-list)
+              (prog1 (cons permutations-so-far permutations-list)
+                (setf permutations-so-far
+                      (* selection-count permutations-so-far))))
+            selection-counts :from-end t :initial-value nil)))
 
 (defun %compute-selection-forms (testclauses env else-tag)
   (multiple-value-bind (selection-forms selection-counts defaultps)
       (%expand-linearize testclauses env)
     (values
-     (map-bind (mapcar) ((selection-form selection-forms)
-                         (defaultp defaultps)
-                         (factor (%compute-factors selection-counts)))
-       `(* ,factor ,(if defaultp
-                        `(or ,selection-form (go ,else-tag))
-                        selection-form)))
+     (mapcar (lambda (selection-form defaultp factor)
+               `(* ,factor ,(if defaultp
+                                `(or ,selection-form (go ,else-tag))
+                                selection-form)))
+             selection-forms
+             defaultps
+             (%compute-factors selection-counts))
      selection-counts)))
 
 
