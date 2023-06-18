@@ -1,19 +1,11 @@
 (in-package #:cartesian-product-switch)
 
-(defclass definitions-system (defsys:standard-system)
-  ())
-
-(defvar *definitions* (make-instance 'definitions-system))
-
-(setf (defsys:locate (defsys:root-system) 'cartesian-product-switch:testclause)
-      *definitions*)
+(define (defsys:standard-system cp-switch:testclause-kind))
 
 (defgeneric lambda-list (object))
 (defgeneric expander (object))
 
-(defclass definition () ())
-
-(defclass standard-definition (definition defsys:name-mixin)
+(defclass cp-switch:standard-testclause-kind (cp-switch:testclause-kind defsys:standard-definition)
   ((%lambda-list :initarg :lambda-list
                  :reader lambda-list
                  :type list)
@@ -22,8 +14,7 @@
               :type (or function symbol))))
 
 (defun %expand (testclause &optional env)
-  (funcall (expander
-            (defsys:locate *definitions* (first testclause)))
+  (funcall (expander (defsys:locate 'cp-switch:testclause-kind (first testclause)))
            testclause
            env))
 
@@ -60,15 +51,9 @@
              (%check-expected-operator ,operator-var ',name)
              ,@body))))))
 
-(defun %ensure (name lambda-list expander)
-  (setf (defsys:locate *definitions* name)
-        (make-instance 'standard-definition
-                       :name name
-                       :lambda-list lambda-list
-                       :expander expander)))
-
-(defmethod defsys:expand-definition ((system definitions-system) name environment args &key)
+(defmethod defsys:expand ((prototype cp-switch:standard-testclause-kind) name environment args &rest options)
   (destructuring-bind (macro-lambda-list &body body) args
-    `(%ensure ',name
-              ',macro-lambda-list
-              ,(%make-expander name macro-lambda-list body))))
+    (apply #'call-next-method prototype name environment
+           `(:lambda-list ',macro-lambda-list
+             :expander ,(%make-expander name macro-lambda-list body))
+           options)))

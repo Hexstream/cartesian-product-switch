@@ -5,4 +5,6 @@
   (:import-from #:trivial-jumptables #:ejumpcase)
   (:export #:cartesian-product-switch ; import this single symbol for normal usage.
 
-           #:testclause))
+           #:testclause
+           #:testclause-kind
+           #:standard-testclause-kind))

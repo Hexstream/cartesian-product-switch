@@ -7,7 +7,10 @@
                (funcall function arg (incf index)))
              arg)))
 
-(define (testclause svref) (possibilities-count index)
+(define (cp-switch:standard-testclause-kind if) (test)
+  (values `(if ,test 0 1) 2 nil))
+
+(define (cp-switch:standard-testclause-kind svref) (possibilities-count index)
   (check-type possibilities-count (integer 0))
   (values (let ((index-var (gensym (string '#:index))))
             `(let ((,index-var ,index))
@@ -15,31 +18,30 @@
           possibilities-count
           t))
 
-(define (testclause cond) (&body tests)
+(define (cp-switch:standard-testclause-kind cond) (&body tests)
   (values `(cond ,@(%map-with-index #'mapcar #'list tests))
           (length tests)
           t))
 
-(dolist (operator-group '((case ccase ecase) (typecase ctypecase etypecase)))
-  (let ((group-name (first operator-group)))
-    (dolist (operator operator-group)
-      (%ensure
-       operator
-       (list (if (member operator '(ccase ctypecase))
-                 'keyplace
-                 'keyform)
-             '&body
-             (if (eq group-name 'case)
-                 'keygroups
-                 'tests))
-       (lambda (form env)
-         (declare (ignore env))
-         (destructuring-bind (keyform &body tests) (cdr form)
-           (values `(,operator
-                     ,keyform
-                     ,@(%map-with-index #'mapcar #'list tests))
-                   (length tests)
-                   (member operator '(case typecase)))))))))
+(defmacro %define-caselikes ((caselike ccaselike ecaselike))
+  (let ((clause-test-var (if (eq caselike 'case)
+                             'keygroups
+                             'tests)))
+    (flet ((%def (operator)
+             (let* ((key-var (if (member operator '(ccase ctypecase))
+                                 'keyplace
+                                 'keyform))
+                    (lambda-list `(,key-var &body ,clause-test-var)))
+               `(define (cp-switch:standard-testclause-kind ,operator) ,lambda-list
+                  (values (list* ',operator
+                                 ,key-var
+                                 (%map-with-index #'mapcar #'list ,clause-test-var))
+                          (length ,clause-test-var)
+                          ,(not (null (member operator '(case typecase)))))))))
+      `(progn
+         ,(%def caselike)
+         ,(%def ccaselike)
+         ,(%def ecaselike)))))
 
-(define (testclause if) (test)
-  (values `(if ,test 0 1) 2 nil))
+(%define-caselikes (case ccase ecase))
+(%define-caselikes (typecase ctypecase etypecase))

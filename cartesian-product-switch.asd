@@ -10,11 +10,11 @@
   :depends-on ("definitions-systems"
                "trivial-jumptables")
 
-  :version "2.0"
+  :version "3.0"
   :serial cl:t
   :components ((:file "package")
                (:file "defsys")
                (:file "definitions")
-	       (:file "main"))
+               (:file "main"))
 
   :in-order-to ((asdf:test-op (asdf:test-op #:cartesian-product-switch_tests))))
